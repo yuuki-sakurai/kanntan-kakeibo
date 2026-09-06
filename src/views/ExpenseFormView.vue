@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
-import { expenseApi } from "@/api/expenseApi"
+import { expenseApi, ExpenseApiError } from "@/api/expenseApi"
 import type { CategoryId } from "@/types/expense"
 import { categoryMeta } from "@/types/expense"
 import { formatCurrency } from "@/utils/format"
@@ -15,7 +15,8 @@ interface FormItem {
 
 const route = useRoute()
 const router = useRouter()
-const today = new Date().toISOString().slice(0, 10)
+const now = new Date()
+const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`
 
 const date = ref(typeof route.query.date === "string" ? route.query.date : today)
 const store = ref("")
@@ -23,6 +24,7 @@ const category = ref<CategoryId>("food")
 const items = ref<FormItem[]>([{ key: 1, name: "", unitPrice: null, quantity: 1 }])
 const stores = ref<string[]>([])
 const saving = ref(false)
+const storesError = ref("")
 const submitError = ref("")
 
 const total = computed(() =>
@@ -33,7 +35,8 @@ const total = computed(() =>
 )
 
 const addItem = () => {
-  items.value.push({ key: Date.now(), name: "", unitPrice: null, quantity: 1 })
+  if (items.value.length >= 100) return
+  items.value.push({ key: Math.max(...items.value.map((item) => item.key)) + 1, name: "", unitPrice: null, quantity: 1 })
 }
 
 const removeItem = (key: number) => {
@@ -42,15 +45,16 @@ const removeItem = (key: number) => {
 }
 
 const submit = async () => {
+  if (saving.value) return
   submitError.value = ""
-  if (!date.value || !store.value.trim() || items.value.some((item) => !item.name.trim() || !item.unitPrice || item.quantity < 1)) {
-    submitError.value = "未入力の項目があります。内容を確認してください。"
+  if (!date.value || !store.value.trim() || items.value.some((item) => !item.name.trim() || item.unitPrice === null || !Number.isInteger(item.unitPrice) || Number(item.unitPrice) < 0 || Number(item.unitPrice) > 100000000 || !Number.isInteger(item.quantity) || item.quantity < 1 || item.quantity > 10000)) {
+    submitError.value = "必須項目と単価・個数の入力範囲を確認してください。"
     return
   }
 
   saving.value = true
   try {
-    await expenseApi.createExpense({
+    const saved = await expenseApi.createExpense({
       date: date.value,
       store: store.value.trim(),
       category: category.value,
@@ -60,16 +64,20 @@ const submit = async () => {
         quantity: Number(item.quantity),
       })),
     })
-    await router.push({ name: "day-detail", params: { date: date.value }, query: { saved: "1" } })
-  } catch {
-    submitError.value = "保存できませんでした。時間をおいてもう一度お試しください。"
+    await router.push({ name: "day-detail", params: { date: saved.date }, query: { saved: "1" } })
+  } catch (error) {
+    submitError.value = error instanceof ExpenseApiError ? error.message : "保存結果を確認できませんでした。明細を確認してください。"
   } finally {
     saving.value = false
   }
 }
 
 onMounted(async () => {
-  stores.value = await expenseApi.getStoreSuggestions()
+  try {
+    stores.value = await expenseApi.getStoreSuggestions()
+  } catch {
+    storesError.value = "店舗候補を読み込めませんでした。店舗名は直接入力できます。"
+  }
 })
 </script>
 
@@ -83,6 +91,8 @@ onMounted(async () => {
       <p>レシートを見ながら、使った内容を記録しましょう。</p>
     </div>
 
+    <p v-if="storesError" class="error-banner" role="status">{{ storesError }}</p>
+
     <form class="expense-form" @submit.prevent="submit">
       <section class="form-section">
         <div class="form-section-number">01</div>
@@ -94,11 +104,11 @@ onMounted(async () => {
           <div class="field-grid two-columns">
             <label class="field">
               <span>日付 <em>必須</em></span>
-              <input v-model="date" type="date" required />
+              <input v-model="date" type="date" min="1000-01-01" max="9999-12-31" required />
             </label>
             <label class="field">
               <span>使ったお店 <em>必須</em></span>
-              <input v-model="store" type="text" list="store-list" placeholder="例：オーケー" required />
+              <input v-model="store" type="text" maxlength="255" list="store-list" placeholder="例：オーケー" required />
               <datalist id="store-list">
                 <option v-for="storeName in stores" :key="storeName" :value="storeName" />
               </datalist>
@@ -121,7 +131,7 @@ onMounted(async () => {
               <h2>買ったもの</h2>
               <span>品目ごとに単価と個数を入力</span>
             </div>
-            <button class="secondary-button" type="button" @click="addItem"><span>＋</span> 品目を追加</button>
+            <button class="secondary-button" type="button" :disabled="items.length >= 100" @click="addItem"><span>＋</span> 品目を追加</button>
           </div>
 
           <div class="form-items">
@@ -129,18 +139,18 @@ onMounted(async () => {
               <span class="form-item-index">{{ String(index + 1).padStart(2, "0") }}</span>
               <label class="field item-name-field">
                 <span>内容・品目 <em>必須</em></span>
-                <input v-model="item.name" type="text" placeholder="例：食料品" required />
+                <input v-model="item.name" type="text" maxlength="255" placeholder="例：食料品" required />
               </label>
               <label class="field">
                 <span>単価 <em>必須</em></span>
                 <div class="currency-input">
                   <span>¥</span>
-                  <input v-model.number="item.unitPrice" type="number" min="1" inputmode="numeric" placeholder="0" required />
+                  <input v-model.number="item.unitPrice" type="number" min="0" max="100000000" step="1" inputmode="numeric" placeholder="0" required />
                 </div>
               </label>
               <label class="field quantity-field">
                 <span>個数 <em>必須</em></span>
-                <input v-model.number="item.quantity" type="number" min="1" inputmode="numeric" required />
+                <input v-model.number="item.quantity" type="number" min="1" max="10000" step="1" inputmode="numeric" required />
               </label>
               <button class="remove-item" type="button" :disabled="items.length === 1" aria-label="この品目を削除" @click="removeItem(item.key)">×</button>
             </div>

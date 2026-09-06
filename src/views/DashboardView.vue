@@ -6,7 +6,7 @@ import { expenseApi } from "@/api/expenseApi"
 import type { MonthlySummary } from "@/types/expense"
 import { formatCurrency } from "@/utils/format"
 
-const viewDate = ref(new Date(2026, 8, 1))
+const viewDate = ref(new Date())
 const summary = ref<MonthlySummary | null>(null)
 const loading = ref(true)
 const error = ref("")
@@ -19,15 +19,21 @@ const average = computed(() =>
   recordedDays.value ? Math.round((summary.value?.total ?? 0) / recordedDays.value) : 0,
 )
 
+let requestId = 0
 const loadSummary = async () => {
+  const currentRequest = ++requestId
+  summary.value = null
   loading.value = true
   error.value = ""
   try {
-    summary.value = await expenseApi.getMonthlySummary(year.value, month.value)
+    const result = await expenseApi.getMonthlySummary(year.value, month.value)
+    if (currentRequest !== requestId) return
+    summary.value = result
   } catch {
+    if (currentRequest !== requestId) return
     error.value = "支出データを読み込めませんでした。"
   } finally {
-    loading.value = false
+    if (currentRequest === requestId) loading.value = false
   }
 }
 

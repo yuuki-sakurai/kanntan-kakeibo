@@ -14,15 +14,21 @@ const error = ref("")
 const date = computed(() => String(route.params.date))
 const total = computed(() => expenses.value.reduce((sum, expense) => sum + expense.total, 0))
 
+let requestId = 0
 const loadExpenses = async () => {
+  const currentRequest = ++requestId
+  expenses.value = []
   loading.value = true
   error.value = ""
   try {
-    expenses.value = await expenseApi.getDailyExpenses(date.value)
+    const result = await expenseApi.getDailyExpenses(date.value)
+    if (currentRequest !== requestId) return
+    expenses.value = result
   } catch {
+    if (currentRequest !== requestId) return
     error.value = "この日の明細を読み込めませんでした。"
   } finally {
-    loading.value = false
+    if (currentRequest === requestId) loading.value = false
   }
 }
 
@@ -48,7 +54,7 @@ onMounted(loadExpenses)
     <p v-if="route.query.saved === '1'" class="success-banner" role="status">支出を保存しました。</p>
     <div v-if="loading" class="loading-panel"><span class="loader"></span> 明細を読み込んでいます</div>
 
-    <template v-else>
+    <template v-else-if="!error">
       <section class="daily-total-card" aria-label="この日の支出合計">
         <div>
           <span>この日の合計</span>
