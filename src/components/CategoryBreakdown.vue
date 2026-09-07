@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue"
 import type { CategoryTotal } from "@/types/expense"
-import { categoryMeta } from "@/types/expense"
+import { getCategoryMeta } from "@/stores/categories"
 import { formatCurrency } from "@/utils/format"
 
 const props = defineProps<{ totals: CategoryTotal[] }>()
@@ -22,21 +22,21 @@ const maxAmount = computed(() => Math.max(...props.totals.map((item) => item.amo
       <article v-for="item in totals" :key="item.category" class="category-row">
         <div
           class="category-icon"
-          :style="{ color: categoryMeta[item.category].color, background: categoryMeta[item.category].softColor }"
+          :style="{ color: getCategoryMeta(item.category).color, background: getCategoryMeta(item.category).softColor }"
           aria-hidden="true"
         >
-          {{ categoryMeta[item.category].label.slice(0, 1) }}
+          {{ getCategoryMeta(item.category).label.slice(0, 1) }}
         </div>
         <div class="category-info">
           <div class="category-label-row">
-            <strong>{{ categoryMeta[item.category].label }}</strong>
+            <strong>{{ getCategoryMeta(item.category).label }}</strong>
             <span>{{ item.percentage }}%</span>
           </div>
           <div class="category-bar" aria-hidden="true">
             <span
               :style="{
                 width: `${Math.max((item.amount / maxAmount) * 100, 4)}%`,
-                background: categoryMeta[item.category].color,
+                background: getCategoryMeta(item.category).color,
               }"
             ></span>
           </div>

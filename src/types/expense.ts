@@ -1,13 +1,9 @@
-export type CategoryId =
-  | "housing"
-  | "food"
-  | "dining"
-  | "transport"
-  | "utilities"
-  | "daily"
-  | "shopping"
-  | "health"
-  | "leisure"
+export type CategoryId = string
+
+export interface ExpenseCategory {
+  id: CategoryId
+  name: string
+}
 
 export interface ExpenseItem {
   id: string
@@ -52,7 +48,7 @@ export interface CreateExpenseInput {
   items: Array<Pick<ExpenseItem, "name" | "unitPrice" | "quantity">>
 }
 
-export const categoryMeta: Record<
+export const defaultCategoryMeta: Record<
   CategoryId,
   { label: string; color: string; softColor: string }
 > = {

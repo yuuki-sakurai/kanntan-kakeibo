@@ -3,7 +3,7 @@ import { computed, onMounted, ref, watch } from "vue"
 import { useRoute } from "vue-router"
 import { expenseApi } from "@/api/expenseApi"
 import type { Expense } from "@/types/expense"
-import { categoryMeta } from "@/types/expense"
+import { getCategoryMeta } from "@/stores/categories"
 import { formatCurrency, formatDateLong } from "@/utils/format"
 
 const route = useRoute()
@@ -51,7 +51,7 @@ onMounted(loadExpenses)
     </div>
 
     <p v-if="error" class="error-banner" role="alert">{{ error }}</p>
-    <p v-if="route.query.saved === '1'" class="success-banner" role="status">支出を保存しました。</p>
+    <p v-if="route.query.saved === '1'" class="success-banner" role="status">{{ route.query.updated === "1" ? "支出を更新しました。" : "支出を保存しました。" }}</p>
     <div v-if="loading" class="loading-panel"><span class="loader"></span> 明細を読み込んでいます</div>
 
     <template v-else-if="!error">
@@ -64,21 +64,22 @@ onMounted(loadExpenses)
       </section>
 
       <section v-if="expenses.length" class="expense-list" aria-label="支出明細">
-        <article v-for="expense in expenses" :key="expense.id" class="expense-card">
+        <RouterLink v-for="expense in expenses" :key="expense.id" class="expense-card expense-edit-link" :to="{ name: 'expense-edit', params: { id: expense.id } }" :aria-label="`${expense.store}の支出を編集`">
           <div
             class="expense-category-mark"
-            :style="{ color: categoryMeta[expense.category].color, background: categoryMeta[expense.category].softColor }"
+            :style="{ color: getCategoryMeta(expense.category).color, background: getCategoryMeta(expense.category).softColor }"
           >
-            {{ categoryMeta[expense.category].label.slice(0, 1) }}
+            {{ getCategoryMeta(expense.category).label.slice(0, 1) }}
           </div>
           <div class="expense-main">
             <div class="expense-title-row">
               <div>
                 <h2>{{ expense.store }}</h2>
-                <span>{{ categoryMeta[expense.category].label }}</span>
+                <span>{{ getCategoryMeta(expense.category).label }}</span>
               </div>
               <strong>{{ formatCurrency(expense.total) }}</strong>
             </div>
+            <p class="edit-hint">クリックして編集 →</p>
             <ul class="item-list">
               <li v-for="item in expense.items" :key="item.id">
                 <span>{{ item.name }}</span>
@@ -86,7 +87,7 @@ onMounted(loadExpenses)
               </li>
             </ul>
           </div>
-        </article>
+        </RouterLink>
       </section>
 
       <section v-else class="empty-state">
@@ -98,3 +99,10 @@ onMounted(loadExpenses)
     </template>
   </main>
 </template>
+
+<style scoped>
+.expense-edit-link { color: inherit; text-decoration: none; transition: border-color 0.15s; }
+.expense-edit-link:hover { border-color: #368368; }
+.expense-edit-link:focus-visible { outline: 3px solid #368368; outline-offset: 3px; }
+.edit-hint { font-size: 12px; color: #368368; margin: 8px 0; }
+</style>

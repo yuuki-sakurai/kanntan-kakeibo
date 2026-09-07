@@ -3,7 +3,7 @@ import { computed, onMounted, ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import { expenseApi, ExpenseApiError } from "@/api/expenseApi"
 import type { CategoryId } from "@/types/expense"
-import { categoryMeta } from "@/types/expense"
+import { categories } from "@/stores/categories"
 import { formatCurrency } from "@/utils/format"
 
 interface FormItem {
@@ -15,6 +15,12 @@ interface FormItem {
 
 const route = useRoute()
 const router = useRouter()
+const editing = route.name === "expense-edit"
+const expenseId = String(route.params.id ?? "")
+const loading = ref(editing)
+const loadError = ref("")
+const originalDate = ref("")
+const cancelTo = computed(() => editing && originalDate.value ? { name: "day-detail", params: { date: originalDate.value } } : { name: "dashboard" })
 const now = new Date()
 const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`
 
@@ -45,7 +51,11 @@ const removeItem = (key: number) => {
 }
 
 const submit = async () => {
-  if (saving.value) return
+  if (saving.value || loading.value || loadError.value) return
+  if (!categories.value.some(item => item.id === category.value)) {
+    submitError.value = "カテゴリを選択してください。"
+    return
+  }
   submitError.value = ""
   if (!date.value || !store.value.trim() || items.value.some((item) => !item.name.trim() || item.unitPrice === null || !Number.isInteger(item.unitPrice) || Number(item.unitPrice) < 0 || Number(item.unitPrice) > 100000000 || !Number.isInteger(item.quantity) || item.quantity < 1 || item.quantity > 10000)) {
     submitError.value = "必須項目と単価・個数の入力範囲を確認してください。"
@@ -54,7 +64,7 @@ const submit = async () => {
 
   saving.value = true
   try {
-    const saved = await expenseApi.createExpense({
+    const input = {
       date: date.value,
       store: store.value.trim(),
       category: category.value,
@@ -63,14 +73,36 @@ const submit = async () => {
         unitPrice: Number(item.unitPrice),
         quantity: Number(item.quantity),
       })),
-    })
-    await router.push({ name: "day-detail", params: { date: saved.date }, query: { saved: "1" } })
+    }
+    const saved = editing ? await expenseApi.updateExpense(expenseId, input) : await expenseApi.createExpense(input)
+    await router.push({ name: "day-detail", params: { date: saved.date }, query: { saved: "1", ...(editing ? { updated: "1" } : {}) } })
   } catch (error) {
     submitError.value = error instanceof ExpenseApiError ? error.message : "保存結果を確認できませんでした。明細を確認してください。"
   } finally {
     saving.value = false
   }
 }
+
+const loadExpense = async () => {
+  loading.value = true
+  loadError.value = ""
+  try {
+    const expense = await expenseApi.getExpense(expenseId)
+    originalDate.value = expense.date
+    date.value = expense.date
+    store.value = expense.store
+    category.value = expense.category
+    items.value = expense.items.map((item, index) => ({ key: index + 1, name: item.name, unitPrice: item.unitPrice, quantity: item.quantity }))
+  } catch (error) {
+    loadError.value = error instanceof ExpenseApiError && error.status === 404
+      ? "この支出は見つかりませんでした。明細一覧を確認してください。"
+      : "支出を読み込めませんでした。再読み込みしてください。"
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(() => { if (editing) void loadExpense() })
 
 onMounted(async () => {
   try {
@@ -83,17 +115,19 @@ onMounted(async () => {
 
 <template>
   <main class="page form-page">
-    <RouterLink class="back-link" to="/"><span aria-hidden="true">←</span> 月間一覧へ戻る</RouterLink>
+    <RouterLink class="back-link" :to="cancelTo"><span aria-hidden="true">←</span> {{ editing && originalDate ? "明細へ戻る" : "月間一覧へ戻る" }}</RouterLink>
 
     <div class="form-heading">
-      <p class="eyebrow">NEW EXPENSE</p>
-      <h1>支出を入力</h1>
-      <p>レシートを見ながら、使った内容を記録しましょう。</p>
+      <p class="eyebrow">{{ editing ? "EDIT EXPENSE" : "NEW EXPENSE" }}</p>
+      <h1>{{ editing ? "支出を編集" : "支出を入力" }}</h1>
+      <p>{{ editing ? "カテゴリ・内容・金額などを修正できます。" : "レシートを見ながら、使った内容を記録しましょう。" }}</p>
     </div>
 
     <p v-if="storesError" class="error-banner" role="status">{{ storesError }}</p>
 
-    <form class="expense-form" @submit.prevent="submit">
+    <div v-if="loading" class="loading-panel">支出を読み込んでいます…</div>
+    <div v-else-if="loadError" class="error-banner" role="alert">{{ loadError }} <button type="button" @click="loadExpense">再読み込み</button></div>
+    <form v-else class="expense-form" @submit.prevent="submit">
       <section class="form-section">
         <div class="form-section-number">01</div>
         <div class="form-section-content">
@@ -116,9 +150,11 @@ onMounted(async () => {
           </div>
           <label class="field category-field">
             <span>カテゴリ <em>必須</em></span>
-            <select v-model="category" required>
-              <option v-for="(meta, id) in categoryMeta" :key="id" :value="id">{{ meta.label }}</option>
+            <select v-model="category" required :disabled="!categories.length">
+              <option v-if="!categories.length" value="food">カテゴリを読み込んでいます…</option>
+              <option v-for="item in categories" :key="item.id" :value="item.id">{{ item.name }}</option>
             </select>
+            <RouterLink :to="{ name: 'category-settings' }">カテゴリを追加する</RouterLink>
           </label>
         </div>
       </section>
@@ -169,9 +205,9 @@ onMounted(async () => {
       <p v-if="submitError" class="error-banner" role="alert">{{ submitError }}</p>
 
       <div class="form-actions">
-        <RouterLink class="cancel-button" to="/">キャンセル</RouterLink>
+        <RouterLink class="cancel-button" :to="cancelTo">キャンセル</RouterLink>
         <button class="primary-button submit-button" type="submit" :disabled="saving">
-          {{ saving ? "保存しています…" : "この内容で保存する" }}
+          {{ saving ? "保存しています…" : editing ? "変更を保存する" : "この内容で保存する" }}
         </button>
       </div>
     </form>
