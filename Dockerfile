@@ -8,7 +8,7 @@ ENV VITE_API_BASE_URL=/api/v1
 RUN npm run build
 
 FROM nginx:stable-alpine AS production
-RUN apk add --no-cache ca-certificates
+RUN apk add --no-cache --upgrade ca-certificates && update-ca-certificates
 ENV PORT=8080
 ENV NGINX_ENVSUBST_FILTER="^(PORT|BACKEND_HOST)$"
 COPY --from=build /app/dist /usr/share/nginx/html
