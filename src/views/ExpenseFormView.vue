@@ -5,12 +5,15 @@ import { expenseApi, ExpenseApiError } from "@/api/expenseApi"
 import type { CategoryId } from "@/types/expense"
 import { categories } from "@/stores/categories"
 import { formatCurrency } from "@/utils/format"
+import { defaultTaxRate, isValidTaxRate, itemAmounts } from "@/utils/expenseTax"
 
 interface FormItem {
   key: number
   name: string
   unitPrice: number | null
   quantity: number
+  taxable: boolean
+  taxRate: number
 }
 
 const route = useRoute()
@@ -27,7 +30,7 @@ const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0"
 const date = ref(typeof route.query.date === "string" ? route.query.date : today)
 const store = ref("")
 const category = ref<CategoryId>("food")
-const items = ref<FormItem[]>([{ key: 1, name: "", unitPrice: null, quantity: 1 }])
+const items = ref<FormItem[]>([{ key: 1, name: "", unitPrice: null, quantity: 1, taxable: false, taxRate: defaultTaxRate }])
 const stores = ref<string[]>([])
 const saving = ref(false)
 const storesError = ref("")
@@ -35,14 +38,15 @@ const submitError = ref("")
 
 const total = computed(() =>
   items.value.reduce(
-    (sum, item) => sum + (Number(item.unitPrice) || 0) * (Number(item.quantity) || 0),
+    (sum, item) => sum + itemAmounts(item).total,
     0,
   ),
 )
+const taxTotal = computed(() => items.value.reduce((sum, item) => sum + itemAmounts(item).tax, 0))
 
 const addItem = () => {
   if (items.value.length >= 100) return
-  items.value.push({ key: Math.max(...items.value.map((item) => item.key)) + 1, name: "", unitPrice: null, quantity: 1 })
+  items.value.push({ key: Math.max(...items.value.map((item) => item.key)) + 1, name: "", unitPrice: null, quantity: 1, taxable: false, taxRate: defaultTaxRate })
 }
 
 const removeItem = (key: number) => {
@@ -57,6 +61,10 @@ const submit = async () => {
     return
   }
   submitError.value = ""
+  if (items.value.some(item => item.taxable && !isValidTaxRate(item.taxRate))) {
+    submitError.value = "税率は0〜100%の範囲で、小数点以下2桁まで入力してください。"
+    return
+  }
   if (!date.value || !store.value.trim() || items.value.some((item) => !item.name.trim() || item.unitPrice === null || !Number.isInteger(item.unitPrice) || Number(item.unitPrice) < 0 || Number(item.unitPrice) > 100000000 || !Number.isInteger(item.quantity) || item.quantity < 1 || item.quantity > 10000)) {
     submitError.value = "必須項目と単価・個数の入力範囲を確認してください。"
     return
@@ -72,6 +80,8 @@ const submit = async () => {
         name: item.name.trim(),
         unitPrice: Number(item.unitPrice),
         quantity: Number(item.quantity),
+        taxable: item.taxable,
+        taxRate: item.taxable ? item.taxRate : 0,
       })),
     }
     const saved = editing ? await expenseApi.updateExpense(expenseId, input) : await expenseApi.createExpense(input)
@@ -92,7 +102,7 @@ const loadExpense = async () => {
     date.value = expense.date
     store.value = expense.store
     category.value = expense.category
-    items.value = expense.items.map((item, index) => ({ key: index + 1, name: item.name, unitPrice: item.unitPrice, quantity: item.quantity }))
+    items.value = expense.items.map((item, index) => ({ key: index + 1, name: item.name, unitPrice: item.unitPrice, quantity: item.quantity, taxable: item.taxable ?? false, taxRate: item.taxable ? (item.taxRate ?? 0) : defaultTaxRate }))
   } catch (error) {
     loadError.value = error instanceof ExpenseApiError && error.status === 404
       ? "この支出は見つかりませんでした。明細一覧を確認してください。"
@@ -178,7 +188,7 @@ onMounted(async () => {
                 <input v-model="item.name" type="text" maxlength="255" placeholder="例：食料品" required />
               </label>
               <label class="field">
-                <span>単価 <em>必須</em></span>
+                <span>{{ item.taxable ? "単価（税抜）" : "単価" }} <em>必須</em></span>
                 <div class="currency-input">
                   <span>¥</span>
                   <input v-model.number="item.unitPrice" type="number" min="0" max="100000000" step="1" inputmode="numeric" placeholder="0" required />
@@ -189,15 +199,24 @@ onMounted(async () => {
                 <input v-model.number="item.quantity" type="number" min="1" max="10000" step="1" inputmode="numeric" required />
               </label>
               <button class="remove-item" type="button" :disabled="items.length === 1" aria-label="この品目を削除" @click="removeItem(item.key)">×</button>
+              <div class="item-tax-controls">
+                <label class="tax-toggle"><input v-model="item.taxable" type="checkbox" /> 消費税を加算する</label>
+                <label v-if="item.taxable" class="field tax-rate-field">
+                  <span>税率（%）</span>
+                  <input v-model.number="item.taxRate" type="number" min="0" max="100" step="0.01" inputmode="decimal" required />
+                </label>
+                <span class="item-tax-total">税額 {{ formatCurrency(itemAmounts(item).tax) }} ／ 小計 {{ formatCurrency(itemAmounts(item).total) }}</span>
+              </div>
             </div>
           </div>
+          <p class="tax-help">税込価格をそのまま入力する場合や非課税の品目は、加算をオフにしてください。税率は品目ごとに変更でき、登録後も編集できます。税額は品目ごとに1円未満を切り捨てます。</p>
         </div>
       </section>
 
       <section class="form-total" aria-live="polite">
         <div>
           <span>合計金額</span>
-          <small>単価 × 個数から自動計算</small>
+          <small>単価 × 個数 ＋ 消費税（税額合計 {{ formatCurrency(taxTotal) }}）</small>
         </div>
         <strong>{{ formatCurrency(total) }}</strong>
       </section>
@@ -213,3 +232,13 @@ onMounted(async () => {
     </form>
   </main>
 </template>
+
+<style scoped>
+.item-tax-controls { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 16px; border-top: 1px solid var(--line); padding-top: 12px; }
+.tax-toggle { display: flex; align-items: center; gap: 8px; min-height: 44px; cursor: pointer; }
+.tax-toggle input { width: 20px; height: 20px; }
+.tax-rate-field { width: 120px; }
+.item-tax-total { margin-left: auto; font-size: 13px; }
+.tax-help { color: var(--muted); font-size: 13px; line-height: 1.7; }
+@media (max-width: 640px) { .item-tax-total { width: 100%; margin-left: 0; } }
+</style>

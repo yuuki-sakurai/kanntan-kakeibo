@@ -10,6 +10,9 @@ export interface ExpenseItem {
   name: string
   unitPrice: number
   quantity: number
+  taxable?: boolean
+  taxRate?: number
+  taxAmount?: number
 }
 
 export interface Expense {
@@ -45,7 +48,7 @@ export interface CreateExpenseInput {
   date: string
   store: string
   category: CategoryId
-  items: Array<Pick<ExpenseItem, "name" | "unitPrice" | "quantity">>
+  items: Array<Pick<ExpenseItem, "name" | "unitPrice" | "quantity" | "taxable" | "taxRate">>
 }
 
 export const defaultCategoryMeta: Record<

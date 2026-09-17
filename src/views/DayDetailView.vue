@@ -83,7 +83,7 @@ onMounted(loadExpenses)
             <ul class="item-list">
               <li v-for="item in expense.items" :key="item.id">
                 <span>{{ item.name }}</span>
-                <span>{{ formatCurrency(item.unitPrice) }} × {{ item.quantity }}</span>
+                <span>{{ formatCurrency(item.unitPrice) }} × {{ item.quantity }}<template v-if="item.taxable"> ＋ 消費税 {{ item.taxRate }}%（{{ formatCurrency(item.taxAmount ?? 0) }}）</template></span>
               </li>
             </ul>
           </div>

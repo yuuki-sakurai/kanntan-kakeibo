@@ -98,8 +98,8 @@ test('category creation and listing preserve custom IDs and validation messages'
 
 test('existing expenses use GET and PUT with the complete edited payload', async (t) => {
   const calls = []
-  const input = { date: '2026-09-07', store: '店', category: 'leisure', items: [{ name: 'ビール', unitPrice: 230, quantity: 2 }] }
-  const expense = { ...input, id: '12', total: 460 }
+  const input = { date: '2026-09-07', store: '店', category: 'leisure', items: [{ name: 'ビール', unitPrice: 230, quantity: 2, taxable: true, taxRate: 10 }] }
+  const expense = { ...input, id: '12', total: 506 }
   t.mock.method(globalThis, 'fetch', async (url, init) => {
     calls.push({ url, init })
     return Response.json(expense)

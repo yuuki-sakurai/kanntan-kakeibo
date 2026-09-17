@@ -91,7 +91,7 @@ export class HttpExpenseApi implements ExpenseApi {
         throw new ExpenseApiError("ファイルが大きすぎます。2MB以内のCSVを選択してください。", 413)
       }
       if (response.status === 422) {
-        throw new ExpenseApiError("入力内容を確認してください。日付・カテゴリ、255文字以内の店舗・品目名、単価0〜100,000,000円、個数1〜10,000（整数）、品目100件以内で入力してください。", 422)
+        throw new ExpenseApiError("入力内容を確認してください。日付・カテゴリ、255文字以内の店舗・品目名、単価0〜100,000,000円、個数1〜10,000（整数）、税率0〜100%（小数点以下2桁まで）、品目100件以内で入力してください。", 422)
       }
       throw new ExpenseApiError("データを処理できませんでした。時間をおいて再度お試しください。", response.status)
     }
