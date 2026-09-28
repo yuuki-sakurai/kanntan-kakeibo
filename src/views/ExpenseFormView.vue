@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue"
+import { computed, nextTick, onMounted, ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import { expenseApi, ExpenseApiError } from "@/api/expenseApi"
 import type { CategoryId } from "@/types/expense"
@@ -44,9 +44,16 @@ const total = computed(() =>
 )
 const taxTotal = computed(() => items.value.reduce((sum, item) => sum + itemAmounts(item).tax, 0))
 
-const addItem = () => {
+const addItem = async () => {
   if (items.value.length >= 100) return
-  items.value.push({ key: Math.max(...items.value.map((item) => item.key)) + 1, name: "", unitPrice: null, quantity: 1, taxable: false, taxRate: defaultTaxRate })
+  const item = { key: Math.max(...items.value.map((item) => item.key)) + 1, name: "", unitPrice: null, quantity: 1, taxable: false, taxRate: defaultTaxRate }
+  items.value.push(item)
+  await nextTick()
+  const input = document.getElementById(`expense-item-name-${item.key}`)
+  if (input instanceof HTMLInputElement) {
+    input.focus({ preventScroll: true })
+    input.scrollIntoView({ behavior: "smooth", block: "start" })
+  }
 }
 
 const removeItem = (key: number) => {
@@ -185,7 +192,7 @@ onMounted(async () => {
               <span class="form-item-index">{{ String(index + 1).padStart(2, "0") }}</span>
               <label class="field item-name-field">
                 <span>内容・品目 <em>必須</em></span>
-                <input v-model="item.name" type="text" maxlength="255" placeholder="例：食料品" required />
+                <input :id="`expense-item-name-${item.key}`" v-model="item.name" type="text" maxlength="255" placeholder="例：食料品" required />
               </label>
               <label class="field">
                 <span>{{ item.taxable ? "単価（税抜）" : "単価" }} <em>必須</em></span>
@@ -209,25 +216,29 @@ onMounted(async () => {
               </div>
             </div>
           </div>
+          <button class="secondary-button add-item-bottom" type="button" :disabled="items.length >= 100" @click="addItem"><span>＋</span> 品目を追加</button>
           <p class="tax-help">税込価格をそのまま入力する場合や非課税の品目は、加算をオフにしてください。税率は品目ごとに変更でき、登録後も編集できます。税額は品目ごとに1円未満を切り捨てます。</p>
         </div>
       </section>
 
-      <section class="form-total" aria-live="polite">
-        <div>
-          <span>合計金額</span>
-          <small>単価 × 個数 ＋ 消費税（税額合計 {{ formatCurrency(taxTotal) }}）</small>
+      <div class="form-bottom-dock">
+        <section class="form-total" aria-live="polite">
+          <div>
+            <span>合計金額</span>
+            <small>単価 × 個数 ＋ 消費税（税額合計 {{ formatCurrency(taxTotal) }}）</small>
+          </div>
+          <strong>{{ formatCurrency(total) }}</strong>
+        </section>
+
+        <p v-if="submitError" class="error-banner" role="alert">{{ submitError }}</p>
+
+        <div class="form-actions">
+          <RouterLink class="cancel-button" :to="cancelTo">キャンセル</RouterLink>
+          <button class="primary-button submit-button" type="submit" :disabled="saving">
+            <span class="desktop-submit-label">{{ saving ? "保存しています…" : editing ? "変更を保存する" : "この内容で保存する" }}</span>
+            <span class="mobile-submit-label">{{ saving ? "保存中…" : "保存する" }}</span>
+          </button>
         </div>
-        <strong>{{ formatCurrency(total) }}</strong>
-      </section>
-
-      <p v-if="submitError" class="error-banner" role="alert">{{ submitError }}</p>
-
-      <div class="form-actions">
-        <RouterLink class="cancel-button" :to="cancelTo">キャンセル</RouterLink>
-        <button class="primary-button submit-button" type="submit" :disabled="saving">
-          {{ saving ? "保存しています…" : editing ? "変更を保存する" : "この内容で保存する" }}
-        </button>
       </div>
     </form>
   </main>
@@ -240,5 +251,50 @@ onMounted(async () => {
 .tax-rate-field { width: 120px; }
 .item-tax-total { margin-left: auto; font-size: 13px; }
 .tax-help { color: var(--muted); font-size: 13px; line-height: 1.7; }
-@media (max-width: 640px) { .item-tax-total { width: 100%; margin-left: 0; } }
+.item-name-field input { scroll-margin-top: 14px; }
+.mobile-submit-label { display: none; }
+@media (max-width: 640px) {
+  .item-tax-total { width: 100%; margin-left: 0; }
+  .add-item-bottom { width: 100%; min-height: 48px; margin-top: 14px; }
+}
+
+@media (max-width: 720px) {
+  .form-page { padding-bottom: calc(190px + env(safe-area-inset-bottom)); }
+  .form-bottom-dock {
+    position: fixed;
+    right: 0;
+    bottom: calc(68px + env(safe-area-inset-bottom));
+    left: 0;
+    z-index: 29;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(128px, 42%);
+    grid-template-areas: "error error" "total actions";
+    align-items: center;
+    gap: 8px 12px;
+    padding: 10px max(14px, env(safe-area-inset-right)) 10px max(14px, env(safe-area-inset-left));
+    border-top: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 -8px 24px rgba(21, 33, 61, 0.1);
+  }
+  .form-bottom-dock .form-total {
+    grid-area: total;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    background: transparent;
+  }
+  .form-bottom-dock .form-total > div { min-width: 0; }
+  .form-bottom-dock .form-total span { font-size: 12px; white-space: nowrap; }
+  .form-bottom-dock .form-total small { display: none; }
+  .form-bottom-dock .form-total strong { margin: 0; font-size: clamp(18px, 5vw, 24px); line-height: 1.2; white-space: nowrap; }
+  .form-bottom-dock > .error-banner { grid-area: error; margin: 0; }
+  .form-bottom-dock .form-actions { grid-area: actions; min-width: 0; }
+  .form-bottom-dock .cancel-button,
+  .desktop-submit-label { display: none; }
+  .form-bottom-dock .submit-button { width: 100%; min-width: 0; min-height: 48px; padding: 0 10px; }
+  .mobile-submit-label { display: inline; }
+}
 </style>
