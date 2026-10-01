@@ -44,6 +44,18 @@ export interface MonthlySummary {
   categoryTotals: CategoryTotal[]
 }
 
+export interface CategoryBudget {
+  category: CategoryId
+  amount: number
+}
+
+export interface MonthlyBudget {
+  year: number
+  month: number
+  amount: number | null
+  categoryBudgets: CategoryBudget[]
+}
+
 export interface CreateExpenseInput {
   date: string
   store: string

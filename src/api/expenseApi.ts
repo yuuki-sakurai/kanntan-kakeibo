@@ -1,5 +1,5 @@
 /// <reference types="vite/client" />
-import type { CreateExpenseInput, Expense, ExpenseCategory, MonthlySummary } from "@/types/expense"
+import type { CreateExpenseInput, Expense, ExpenseCategory, MonthlyBudget, MonthlySummary } from "@/types/expense"
 import type { CsvEncoding, ExpenseImportPreview, ExpenseImportResult } from "@/types/expenseImport"
 
 export interface AuthUser { id: number; name: string; email: string }
@@ -11,6 +11,8 @@ export interface ExpenseApi {
   register(name: string, email: string, password: string, password_confirmation: string): Promise<AuthSession>
   logout(): Promise<AuthSession>
   getMonthlySummary(year: number, month: number): Promise<MonthlySummary>
+  getMonthlyBudget(year: number, month: number): Promise<MonthlyBudget>
+  saveMonthlyBudget(input: MonthlyBudget): Promise<MonthlyBudget>
   getDailyExpenses(date: string): Promise<Expense[]>
   getExpense(id: string): Promise<Expense>
   updateExpense(id: string, input: CreateExpenseInput): Promise<Expense>
@@ -37,7 +39,7 @@ export class HttpExpenseApi implements ExpenseApi {
     this.baseUrl = baseUrl.replace(/\/+$/, "")
   }
 
-  private async request<T>(path: string, input?: CreateExpenseInput | FormData | Record<string, string>, method = input ? "POST" : "GET"): Promise<T> {
+  private async request<T>(path: string, input?: CreateExpenseInput | MonthlyBudget | FormData | Record<string, string>, method = input ? "POST" : "GET"): Promise<T> {
     if (input && !this.csrfToken) await this.getSession()
     const isUpload = input instanceof FormData
     let response: Response
@@ -77,6 +79,9 @@ export class HttpExpenseApi implements ExpenseApi {
         }
         throw new ExpenseApiError(message, 422)
       }
+      if (path === "/monthly-budget" && response.status === 422) {
+        throw new ExpenseApiError("月と予算額、カテゴリ別予算を確認してください。予算は0円以上の整数で入力できます。", 422)
+      }
       if (isUpload && response.status === 422) {
         const body: unknown = await response.json().catch(() => null)
         const details: string[] = []
@@ -113,6 +118,14 @@ export class HttpExpenseApi implements ExpenseApi {
 
   getMonthlySummary(year: number, month: number): Promise<MonthlySummary> {
     return this.request(`/monthly-summary?${new URLSearchParams({ year: String(year), month: String(month) })}`)
+  }
+
+  getMonthlyBudget(year: number, month: number): Promise<MonthlyBudget> {
+    return this.request(`/monthly-budget?${new URLSearchParams({ year: String(year), month: String(month) })}`)
+  }
+
+  saveMonthlyBudget(input: MonthlyBudget): Promise<MonthlyBudget> {
+    return this.request("/monthly-budget", input, "PUT")
   }
 
   getDailyExpenses(date: string): Promise<Expense[]> {
