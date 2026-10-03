@@ -104,5 +104,5 @@ onMounted(loadExpenses)
 .expense-edit-link { color: inherit; text-decoration: none; transition: border-color 0.15s; }
 .expense-edit-link:hover { border-color: #368368; }
 .expense-edit-link:focus-visible { outline: 3px solid #368368; outline-offset: 3px; }
-.edit-hint { font-size: 12px; color: #368368; margin: 8px 0; }
+.edit-hint { font-size: var(--text-caption); color: #368368; margin: 8px 0; }
 </style>

@@ -84,3 +84,7 @@ APIクライアントのテストは `household-env` で `docker compose exec ho
 本番は同一オリジンのAPIプロキシ、または同一サイトのHTTPSサブドメインを使用してください。Laravelの `FRONTEND_ORIGINS` にフロントのオリジンを指定し、`SESSION_SECURE_COOKIE=true` とします。フロントのビルド時に `VITE_API_BASE_URL` を設定します。
 
 Googleログインは今後追加予定です。同じユーザーIDとセッションを利用できる構成で、今回はメール確認・パスワード再設定メール・Google認証は含みません。
+
+## 文字の共通設定
+
+フォント・サイズ・太さ・行間は `src/typography.css` で定義しています。両SPAで同じ定義を維持してください。[共通タイポグラフィ](docs/typography.md)を参照してください。

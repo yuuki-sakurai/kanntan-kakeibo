@@ -1,7 +1,9 @@
+@import "./typography.css";
+
 :root {
   color: #23332d;
   background: #f3f2eb;
-  font-family: "Noto Sans JP", "Yu Gothic", "Hiragino Kaku Gothic ProN", sans-serif;
+  font-family: var(--font-ui);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   --navy: #193d33;
@@ -96,8 +98,8 @@ select:focus-visible {
   border-radius: 13px;
   background: linear-gradient(145deg, #285647, #17372f);
   color: white;
-  font-size: 15px;
-  font-weight: 700;
+  font-size: var(--text-control);
+  font-weight: var(--weight-bold);
 }
 
 .brand > span:last-child {
@@ -106,15 +108,15 @@ select:focus-visible {
 }
 
 .brand strong {
-  font-size: 17px;
-  letter-spacing: 0.04em;
+  font-size: var(--text-subheading);
+  letter-spacing: var(--tracking-label);
 }
 
 .brand small {
   margin-top: 1px;
   color: var(--muted);
-  font-size: 10px;
-  letter-spacing: 0.12em;
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-label);
 }
 
 .desktop-nav {
@@ -129,8 +131,8 @@ select:focus-visible {
   display: flex;
   align-items: center;
   color: #737b8c;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
 }
 
 .desktop-nav a::after {
@@ -167,14 +169,14 @@ select:focus-visible {
   color: #fff;
   box-shadow: 0 8px 18px rgba(165, 93, 60, 0.2);
   cursor: pointer;
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   transition: background 160ms ease, transform 160ms ease;
 }
 
 .header-add-button {
   margin-left: auto;
   min-height: 40px;
-  font-size: 14px;
+  font-size: var(--text-body);
 }
 
 .header-add-button:hover,
@@ -206,10 +208,10 @@ select:focus-visible {
 .eyebrow {
   margin: 0 0 7px;
   color: var(--coral);
-  font-family: "Roboto Mono", monospace;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.16em;
+  font-family: var(--font-ui);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-label);
 }
 
 h1,
@@ -221,9 +223,9 @@ p {
 .page h1 {
   margin: 0;
   color: var(--navy);
-  font-size: clamp(28px, 3vw, 38px);
-  line-height: 1.25;
-  letter-spacing: -0.035em;
+  font-size: var(--text-page);
+  line-height: var(--leading-heading);
+  letter-spacing: var(--tracking-heading);
 }
 
 .month-switcher {
@@ -243,7 +245,7 @@ p {
   background: transparent;
   color: var(--navy);
   cursor: pointer;
-  font-size: 27px;
+  font-size: var(--text-title);
 }
 
 .month-switcher button:hover {
@@ -252,8 +254,8 @@ p {
 
 .month-switcher strong {
   text-align: center;
-  font-size: 15px;
-  letter-spacing: 0.04em;
+  font-size: var(--text-control);
+  letter-spacing: var(--tracking-label);
 }
 
 .monthly-overview {
@@ -291,15 +293,15 @@ p {
   position: relative;
   margin: 0 0 10px;
   color: #cbd2e0;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
 }
 
 .total-card > strong {
   position: relative;
-  font-family: "Roboto Mono", monospace;
-  font-size: clamp(31px, 3vw, 39px);
-  letter-spacing: -0.05em;
+  font-family: var(--font-ui);
+  font-size: var(--text-amount);
+  letter-spacing: var(--tracking-heading);
 }
 
 .total-card-rule {
@@ -323,14 +325,14 @@ p {
 
 .summary-stats dt {
   color: #aeb8cd;
-  font-size: 13px;
+  font-size: var(--text-body);
 }
 
 .summary-stats dd {
   margin: 0;
-  font-family: "Roboto Mono", monospace;
-  font-size: 16px;
-  font-weight: 600;
+  font-family: var(--font-ui);
+  font-size: var(--text-control);
+  font-weight: var(--weight-semibold);
 }
 
 .total-add-link {
@@ -344,8 +346,8 @@ p {
   border: 1px solid rgba(255, 255, 255, 0.27);
   border-radius: 9px;
   background: rgba(255, 255, 255, 0.08);
-  font-size: 14px;
-  font-weight: 700;
+  font-size: var(--text-body);
+  font-weight: var(--weight-bold);
   transition: background 160ms ease;
 }
 
@@ -387,13 +389,13 @@ p {
 .expense-title-row h2 {
   margin: 0;
   color: var(--navy);
-  font-size: 18px;
+  font-size: var(--text-subheading);
 }
 
 .calendar-card-heading p {
   margin: 5px 0 0;
   color: var(--muted);
-  font-size: 12px;
+  font-size: var(--text-caption);
 }
 
 .calendar-hint,
@@ -401,7 +403,7 @@ p {
 .form-section-heading > span,
 .expense-title-row span {
   color: var(--muted);
-  font-size: 12px;
+  font-size: var(--text-caption);
 }
 
 .calendar {
@@ -417,8 +419,8 @@ p {
   border-bottom: 1px solid var(--line-light);
   color: #788092;
   text-align: center;
-  font-size: 11px;
-  font-weight: 600;
+  font-size: var(--text-caption);
+  font-weight: var(--weight-semibold);
 }
 
 .calendar-weekday.sunday {
@@ -460,9 +462,9 @@ p {
 }
 
 .day-number {
-  font-family: "Roboto Mono", monospace;
-  font-size: 11px;
-  font-weight: 600;
+  font-family: var(--font-ui);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-semibold);
 }
 
 .day-amount {
@@ -470,9 +472,9 @@ p {
   margin-top: auto;
   overflow: hidden;
   color: var(--navy);
-  font-family: "Roboto Mono", monospace;
-  font-size: clamp(9px, 1vw, 11px);
-  font-weight: 600;
+  font-family: var(--font-ui);
+  font-size: var(--text-compact);
+  font-weight: var(--weight-semibold);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -492,7 +494,7 @@ p {
 }
 
 .section-heading h2 {
-  font-size: 21px;
+  font-size: var(--text-section);
 }
 
 .category-grid {
@@ -518,8 +520,8 @@ p {
   display: grid;
   place-items: center;
   border-radius: 11px;
-  font-size: 13px;
-  font-weight: 700;
+  font-size: var(--text-body);
+  font-weight: var(--weight-bold);
 }
 
 .category-info {
@@ -530,7 +532,7 @@ p {
   display: flex;
   justify-content: space-between;
   gap: 10px;
-  font-size: 13px;
+  font-size: var(--text-body);
 }
 
 .category-label-row strong {
@@ -539,8 +541,8 @@ p {
 
 .category-label-row span {
   color: var(--muted);
-  font-family: "Roboto Mono", monospace;
-  font-size: 11px;
+  font-family: var(--font-ui);
+  font-size: var(--text-caption);
 }
 
 .category-bar {
@@ -561,8 +563,8 @@ p {
   min-width: 78px;
   color: var(--navy);
   text-align: right;
-  font-family: "Roboto Mono", monospace;
-  font-size: 14px;
+  font-family: var(--font-ui);
+  font-size: var(--text-body);
 }
 
 .loading-panel,
@@ -577,7 +579,7 @@ p {
   border-radius: 12px;
   background: white;
   color: var(--muted);
-  font-size: 14px;
+  font-size: var(--text-body);
 }
 
 .success-banner {
@@ -587,8 +589,8 @@ p {
   border-radius: 10px;
   background: #eefaf7;
   color: #216d62;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
 }
 
 .loader {
@@ -619,8 +621,8 @@ p {
   gap: 7px;
   margin-bottom: 28px;
   color: var(--muted);
-  font-size: 13px;
-  font-weight: 600;
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
 }
 
 .back-link:hover {
@@ -652,12 +654,12 @@ p {
 
 .daily-total-card span {
   color: #bfc8d9;
-  font-size: 13px;
+  font-size: var(--text-body);
 }
 
 .daily-total-card strong {
-  font-family: "Roboto Mono", monospace;
-  font-size: 30px;
+  font-family: var(--font-ui);
+  font-size: var(--text-page);
 }
 
 .expense-list {
@@ -697,8 +699,8 @@ p {
 
 .expense-title-row > strong {
   color: var(--navy);
-  font-family: "Roboto Mono", monospace;
-  font-size: 19px;
+  font-family: var(--font-ui);
+  font-size: var(--text-subheading);
 }
 
 .item-list {
@@ -715,11 +717,11 @@ p {
   justify-content: space-between;
   gap: 18px;
   color: var(--muted);
-  font-size: 13px;
+  font-size: var(--text-body);
 }
 
 .item-list li span:last-child {
-  font-family: "Roboto Mono", monospace;
+  font-family: var(--font-ui);
   white-space: nowrap;
 }
 
@@ -742,19 +744,19 @@ p {
   border-radius: 50%;
   background: #eef1f4;
   color: #8c94a3;
-  font-size: 24px;
+  font-size: var(--text-title);
 }
 
 .empty-state h2 {
   margin: 18px 0 8px;
   color: var(--navy);
-  font-size: 20px;
+  font-size: var(--text-section);
 }
 
 .empty-state p {
   margin: 0 0 22px;
   color: var(--muted);
-  font-size: 14px;
+  font-size: var(--text-body);
 }
 
 .form-heading {
@@ -764,7 +766,7 @@ p {
 .form-heading > p:last-child {
   margin: 10px 0 0;
   color: var(--muted);
-  font-size: 14px;
+  font-size: var(--text-body);
 }
 
 .expense-form {
@@ -788,9 +790,9 @@ p {
   border-radius: 10px;
   background: var(--navy);
   color: white;
-  font-family: "Roboto Mono", monospace;
-  font-size: 12px;
-  font-weight: 600;
+  font-family: var(--font-ui);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-semibold);
 }
 
 .form-section-content {
@@ -802,14 +804,14 @@ p {
 }
 
 .form-section-heading h2 {
-  font-size: 20px;
+  font-size: var(--text-section);
 }
 
 .item-heading > div > span {
   display: block;
   margin-top: 4px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: var(--text-caption);
 }
 
 .field-grid.two-columns {
@@ -826,14 +828,14 @@ p {
 
 .field > span {
   color: #4e5669;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
 }
 
 .field em {
   margin-left: 4px;
   color: var(--coral);
-  font-size: 10px;
+  font-size: var(--text-caption);
   font-style: normal;
 }
 
@@ -878,8 +880,8 @@ p {
   background: white;
   color: var(--navy);
   cursor: pointer;
-  font-size: 13px;
-  font-weight: 700;
+  font-size: var(--text-body);
+  font-weight: var(--weight-bold);
 }
 
 .secondary-button:hover {
@@ -905,8 +907,8 @@ p {
 .form-item-index {
   align-self: center;
   color: #9aa1ae;
-  font-family: "Roboto Mono", monospace;
-  font-size: 11px;
+  font-family: var(--font-ui);
+  font-size: var(--text-caption);
 }
 
 .currency-input {
@@ -933,7 +935,7 @@ p {
   background: transparent;
   color: #959daa;
   cursor: pointer;
-  font-size: 20px;
+  font-size: var(--text-section);
 }
 
 .remove-item:disabled {
@@ -960,19 +962,19 @@ p {
 
 .form-total span {
   color: var(--navy);
-  font-size: 14px;
-  font-weight: 700;
+  font-size: var(--text-body);
+  font-weight: var(--weight-bold);
 }
 
 .form-total small {
   color: var(--muted);
-  font-size: 11px;
+  font-size: var(--text-caption);
 }
 
 .form-total strong {
   color: var(--navy);
-  font-family: "Roboto Mono", monospace;
-  font-size: 29px;
+  font-family: var(--font-ui);
+  font-size: var(--text-page);
 }
 
 .form-actions {
@@ -991,8 +993,8 @@ p {
   border-radius: 9px;
   background: white;
   color: var(--muted);
-  font-size: 14px;
-  font-weight: 600;
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
 }
 
 .submit-button {
@@ -1117,7 +1119,7 @@ p {
   }
 
   .calendar-card-heading p {
-    font-size: 11px;
+    font-size: var(--text-caption);
   }
 
   .calendar-day {
@@ -1126,8 +1128,8 @@ p {
   }
 
   .day-amount {
-    font-size: 8px;
-    letter-spacing: -0.05em;
+    font-size: var(--text-caption);
+    letter-spacing: var(--tracking-heading);
   }
 
   .category-section {
@@ -1146,7 +1148,7 @@ p {
 
   .category-amount {
     min-width: 69px;
-    font-size: 12px;
+    font-size: var(--text-caption);
   }
 
   .daily-total-card {
@@ -1154,7 +1156,7 @@ p {
   }
 
   .daily-total-card strong {
-    font-size: 25px;
+    font-size: var(--text-title);
   }
 
   .expense-card {
@@ -1169,7 +1171,7 @@ p {
   }
 
   .expense-title-row > strong {
-    font-size: 16px;
+    font-size: var(--text-control);
   }
 
   .expense-form {
@@ -1267,8 +1269,8 @@ p {
     align-items: center;
     gap: 2px;
     color: #8a91a0;
-    font-size: 10px;
-    font-weight: 600;
+    font-size: var(--text-caption);
+    font-weight: var(--weight-semibold);
   }
 
   .mobile-nav > a.active {
@@ -1276,7 +1278,7 @@ p {
   }
 
   .mobile-nav-icon {
-    font-size: 20px;
+    font-size: var(--text-section);
     line-height: 1;
   }
 
@@ -1293,14 +1295,14 @@ p {
     background: var(--coral);
     color: white;
     box-shadow: 0 7px 16px rgba(239, 106, 76, 0.28);
-    font-size: 26px;
-    font-weight: 400;
+    font-size: var(--text-title);
+    font-weight: var(--weight-regular);
   }
 }
 
 @media (max-width: 390px) {
   .calendar-weekday {
-    font-size: 10px;
+    font-size: var(--text-caption);
   }
 
   .calendar-day {
@@ -1344,7 +1346,7 @@ p {
 /* Quiet, editorial surfaces for the household finance workspace. */
 .page { padding-top: 48px; }
 .page-topline { margin-bottom: 32px; }
-.page h1 { letter-spacing: -0.045em; }
+.page h1 { letter-spacing: var(--tracking-heading); }
 .month-switcher { border-color: rgba(213, 218, 207, .9); background: rgba(255, 254, 250, .88); }
 .month-switcher button:hover { background: #f3f2eb; }
 .calendar-card, .category-section, .expense-card, .expense-form { box-shadow: 0 15px 40px rgba(36, 58, 48, .055); }
@@ -1371,45 +1373,45 @@ p {
 }
 .budget-panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 21px; }
 .budget-panel-heading .eyebrow { margin-bottom: 4px; }
-.budget-panel-heading h2 { margin: 0; color: var(--navy); font-size: 21px; letter-spacing: -.025em; }
-.budget-edit-link { display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 999px; color: var(--navy-2); font-size: 12px; font-weight: 700; transition: background 150ms ease, border-color 150ms ease; }
+.budget-panel-heading h2 { margin: 0; color: var(--navy); font-size: var(--text-section); letter-spacing: var(--tracking-heading); }
+.budget-edit-link { display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 999px; color: var(--navy-2); font-size: var(--text-caption); font-weight: var(--weight-bold); transition: background 150ms ease, border-color 150ms ease; }
 .budget-edit-link:hover { border-color: #c5d0c2; background: #f4f6ef; }
 .budget-overview-grid { display: grid; grid-template-columns: minmax(240px, .85fr) minmax(0, 1.15fr); gap: 18px; }
 .budget-overview-grid.total-only { grid-template-columns: minmax(0, 580px); }
 .budget-total-overview { min-width: 0; padding: 22px 24px; border-radius: 16px; background: #eef3eb; }
 .budget-total-overview.over-budget { background: #fbf0e9; }
 .budget-total-topline, .budget-large-numbers { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
-.budget-total-topline > span { color: #556a5d; font-size: 12px; font-weight: 700; }
-.budget-state { color: #47755c; font-size: 11px; font-weight: 700; }
+.budget-total-topline > span { color: #556a5d; font-size: var(--text-caption); font-weight: var(--weight-bold); }
+.budget-state { color: #47755c; font-size: var(--text-caption); font-weight: var(--weight-bold); }
 .over-budget .budget-state, .category-budget-row.over-budget > p { color: #ac5b39; }
 .budget-large-numbers { justify-content: flex-start; margin: 14px 0 17px; white-space: nowrap; }
-.budget-large-numbers strong { color: var(--navy); font-family: "Roboto Mono", monospace; font-size: clamp(21px, 2.2vw, 29px); letter-spacing: -.06em; }
-.budget-large-numbers > span { overflow: hidden; color: var(--muted); font-size: 13px; text-overflow: ellipsis; }
+.budget-large-numbers strong { color: var(--navy); font-family: var(--font-ui); font-size: var(--text-title); letter-spacing: var(--tracking-heading); }
+.budget-large-numbers > span { overflow: hidden; color: var(--muted); font-size: var(--text-body); text-overflow: ellipsis; }
 .budget-progress-track { height: 7px; overflow: hidden; border-radius: 99px; background: rgba(67, 99, 77, .13); }
 .budget-progress-track > span { height: 100%; display: block; border-radius: inherit; background: #588568; transition: width 250ms ease; }
 .over-budget .budget-progress-track > span { background: #bd704a; }
-.budget-progress-caption { margin: 9px 0 0; color: #647368; font-size: 11px; }
+.budget-progress-caption { margin: 9px 0 0; color: #647368; font-size: var(--text-caption); }
 .category-budget-overview { min-width: 0; padding: 4px 4px 2px 20px; border-left: 1px solid var(--line-light); }
 .category-budget-overview.category-only { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px 20px; padding: 0; border: 0; }
-.category-budget-overview h3 { margin: 0 0 12px; color: var(--navy); font-size: 13px; }
+.category-budget-overview h3 { margin: 0 0 12px; color: var(--navy); font-size: var(--text-body); }
 .category-budget-overview.category-only h3 { grid-column: 1 / -1; margin-bottom: 2px; }
 .category-budget-row { min-width: 0; margin-bottom: 12px; }
-.category-budget-copy { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 7px; color: var(--ink); font-size: 11px; }
+.category-budget-copy { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 7px; color: var(--ink); font-size: var(--text-caption); }
 .category-budget-copy strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.category-budget-copy > span { flex: 0 0 auto; color: #4c5b52; font-family: "Roboto Mono", monospace; font-size: 10px; }
-.category-budget-copy small { color: var(--muted); font-family: inherit; font-size: 9px; }
+.category-budget-copy > span { flex: 0 0 auto; color: #4c5b52; font-family: var(--font-ui); font-size: var(--text-caption); }
+.category-budget-copy small { color: var(--muted); font-family: inherit; font-size: var(--text-caption); }
 .category-budget-row .budget-progress-track { height: 5px; background: #f0f0e9; }
 .category-budget-row .budget-progress-track > span { background: #6c9879; }
-.category-budget-row > p { margin: 4px 0 0; color: var(--muted); text-align: right; font-size: 9px; }
+.category-budget-row > p { margin: 4px 0 0; color: var(--muted); text-align: right; font-size: var(--text-caption); }
 .budget-empty-prompt { min-height: 92px; padding: 17px 20px; display: flex; align-items: center; gap: 15px; border: 1px dashed #cad4c7; border-radius: 15px; background: #f8f8f1; transition: background 150ms ease, border-color 150ms ease; }
 .budget-empty-prompt:hover { border-color: #97b29b; background: #f1f5ed; }
-.budget-empty-icon { width: 38px; height: 38px; flex: 0 0 auto; display: grid; place-items: center; border-radius: 12px; background: #e3ecdf; color: var(--navy-2); font-size: 20px; }
+.budget-empty-icon { width: 38px; height: 38px; flex: 0 0 auto; display: grid; place-items: center; border-radius: 12px; background: #e3ecdf; color: var(--navy-2); font-size: var(--text-section); }
 .budget-empty-prompt > span:nth-child(2) { display: grid; gap: 4px; }
-.budget-empty-prompt strong { color: var(--navy); font-size: 13px; }
-.budget-empty-prompt small { color: var(--muted); font-size: 11px; line-height: 1.5; }
-.budget-empty-arrow { margin-left: auto; color: var(--navy-2); font-size: 21px; }
-.budget-load-error { min-height: 54px; padding: 12px 15px; display: flex; align-items: center; justify-content: space-between; gap: 14px; border: 1px solid #eddbcc; border-radius: 12px; background: #fbf5ef; color: #754f3c; font-size: 12px; }
-.budget-load-error button { padding: 8px 12px; border: 1px solid #d8b99f; border-radius: 999px; background: transparent; color: #754f3c; cursor: pointer; font-size: 11px; font-weight: 700; white-space: nowrap; }
+.budget-empty-prompt strong { color: var(--navy); font-size: var(--text-body); }
+.budget-empty-prompt small { color: var(--muted); font-size: var(--text-caption); line-height: var(--leading-body); }
+.budget-empty-arrow { margin-left: auto; color: var(--navy-2); font-size: var(--text-section); }
+.budget-load-error { min-height: 54px; padding: 12px 15px; display: flex; align-items: center; justify-content: space-between; gap: 14px; border: 1px solid #eddbcc; border-radius: 12px; background: #fbf5ef; color: #754f3c; font-size: var(--text-caption); }
+.budget-load-error button { padding: 8px 12px; border: 1px solid #d8b99f; border-radius: 999px; background: transparent; color: #754f3c; cursor: pointer; font-size: var(--text-caption); font-weight: var(--weight-bold); white-space: nowrap; }
 
 @media (max-width: 900px) {
   .budget-overview-grid { grid-template-columns: 1fr; }
@@ -1423,11 +1425,35 @@ p {
   .category-section { padding: 23px 18px; }
   .budget-panel { padding: 22px 17px; border-radius: 18px; }
   .budget-panel-heading { align-items: flex-start; }
-  .budget-panel-heading h2 { font-size: 19px; }
-  .budget-edit-link { padding: 9px 11px; font-size: 11px; }
+  .budget-panel-heading h2 { font-size: var(--text-subheading); }
+  .budget-edit-link { padding: 9px 11px; font-size: var(--text-caption); }
   .budget-total-overview { padding: 19px 17px; }
   .category-budget-overview.category-only { grid-template-columns: 1fr; }
   .category-budget-overview.category-only h3 { grid-column: auto; }
   .budget-empty-prompt { padding: 15px 13px; gap: 10px; }
-  .budget-empty-prompt small { font-size: 10px; }
+  .budget-empty-prompt small { font-size: var(--text-caption); }
 }
+
+/* Match the same text roles in credit-card-front. */
+.page h1, .auth-card h1 {
+  font-size: var(--text-page);
+  line-height: var(--leading-heading);
+  letter-spacing: var(--tracking-heading);
+}
+.calendar-card-heading h2, .section-heading h2, .form-section-heading h2,
+.expense-title-row h2, .budget-panel-heading h2 {
+  font-size: var(--text-section);
+}
+.eyebrow { font-size: var(--text-caption); font-weight: var(--weight-semibold); }
+.primary-button, .secondary-button { font-size: var(--text-body); font-weight: var(--weight-semibold); }
+.field > span { font-size: var(--text-body); font-weight: var(--weight-semibold); }
+.field input, .field select, .field textarea { font-size: var(--text-control); }
+.total-card > strong { font-size: var(--text-amount); }
+.total-card > strong, .day-amount, .category-amount, .detail-total,
+.budget-large-numbers strong, .item-subtotal, .form-total { font-variant-numeric: tabular-nums; }
+.day-number, .calendar-weekday { font-size: var(--text-caption); line-height: var(--leading-compact); }
+.day-amount { font-size: var(--text-compact); line-height: var(--leading-compact); letter-spacing: 0; }
+@media (max-width: 680px) {
+  .budget-total-topline, .budget-large-numbers, .category-budget-copy { flex-wrap: wrap; }
+}
+.total-card > strong { line-height: var(--leading-heading); font-weight: var(--weight-bold); }
