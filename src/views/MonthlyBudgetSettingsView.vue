@@ -134,26 +134,26 @@ onMounted(() => { void Promise.all([loadCategories(), loadBudget()]) })
 <style scoped>
 .budget-settings { padding: 30px; border: 1px solid var(--line); border-radius: 22px; background: var(--paper); box-shadow: var(--shadow); }
 .budget-settings-header { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 25px; }
-.budget-settings-header h2 { margin: 0; color: var(--navy); font-size: 1.3rem; }
-.budget-intro, .budget-category-heading p { margin: 8px 0 0; color: var(--muted); font-size: .9rem; line-height: 1.7; }
+.budget-settings-header h2 { margin: 0; color: var(--navy); font-size: var(--text-section); }
+.budget-intro, .budget-category-heading p { margin: 8px 0 0; color: var(--muted); font-size: var(--text-body); line-height: var(--leading-body); }
 .budget-total-field { max-width: 520px; padding: 22px; border-radius: 16px; background: #f4f5ed; }
-.budget-total-field label { display: block; margin-bottom: 10px; color: var(--navy); font-weight: 700; }
-.budget-total-field label span { margin-left: 8px; color: var(--muted); font-size: .75rem; font-weight: 500; }
-.budget-total-field small { display: block; margin-top: 10px; color: var(--muted); line-height: 1.6; }
+.budget-total-field label { display: block; margin-bottom: 10px; color: var(--navy); font-weight: var(--weight-bold); }
+.budget-total-field label span { margin-left: 8px; color: var(--muted); font-size: var(--text-caption); font-weight: var(--weight-medium); }
+.budget-total-field small { display: block; margin-top: 10px; color: var(--muted); line-height: var(--leading-body); }
 .budget-input-wrap { min-width: 0; height: 48px; display: flex; align-items: center; gap: 8px; padding: 0 13px; border: 1px solid var(--line); border-radius: 11px; background: var(--paper); color: var(--muted); }
 .budget-input-wrap:focus-within { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(83,138,114,.13); }
-.budget-input-wrap input { width: 100%; min-width: 0; padding: 0; border: 0; outline: 0; background: transparent; color: var(--ink); font-size: 1rem; }
+.budget-input-wrap input { width: 100%; min-width: 0; padding: 0; border: 0; outline: 0; background: transparent; color: var(--ink); font-size: var(--text-control); }
 .budget-category-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin: 32px 0 14px; }
 .budget-category-heading h3 { margin: 0; color: var(--navy); }
-.budget-category-heading > span { color: var(--muted); font-size: .8rem; }
+.budget-category-heading > span { color: var(--muted); font-size: var(--text-body); }
 .budget-category-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 28px; }
 .budget-category-field { min-width: 0; min-height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 18px; border-top: 1px solid var(--line-light); }
-.budget-category-name { min-width: 0; display: flex; align-items: center; gap: 10px; color: var(--ink); font-weight: 600; }
+.budget-category-name { min-width: 0; display: flex; align-items: center; gap: 10px; color: var(--ink); font-weight: var(--weight-semibold); }
 .budget-category-name i { width: 10px; height: 10px; flex: 0 0 auto; border-radius: 50%; }
 .budget-category-field .budget-input-wrap { width: min(205px, 50%); height: 42px; }
-.budget-category-field input { font-size: .9rem; }
+.budget-category-field input { font-size: var(--text-control); }
 .budget-form-actions { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 26px; padding-top: 22px; border-top: 1px solid var(--line); }
-.budget-form-actions p { margin: 0; color: var(--muted); font-size: .82rem; }
+.budget-form-actions p { margin: 0; color: var(--muted); font-size: var(--text-body); }
 .budget-form-actions button { min-width: 160px; }
 .budget-form-actions button:disabled { opacity: .6; cursor: wait; }
 @media (max-width: 720px) {

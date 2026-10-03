@@ -151,32 +151,32 @@ function downloadTemplate() {
 <style scoped>
 .import-card { background: var(--paper); border: 1px solid var(--line); border-radius: 18px; padding: 28px; box-shadow: var(--shadow); }
 .import-heading, .preview-heading { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
-h2 { margin: 0; font-size: 1.25rem; color: var(--navy); }
-h3 { font-size: 1.1rem; margin: 0; }
-p { line-height: 1.8; margin: 8px 0; }
-.import-heading p, .preview-note, .import-actions p { color: var(--muted); font-size: .9rem; }
-.format-guide { margin: 24px 0; padding: 16px 20px; border-radius: 10px; background: var(--canvas); font-size: .9rem; }
-summary { cursor: pointer; font-weight: 700; }
+h2 { margin: 0; font-size: var(--text-section); color: var(--navy); }
+h3 { font-size: var(--text-subheading); margin: 0; }
+p { line-height: var(--leading-body); margin: 8px 0; }
+.import-heading p, .preview-note, .import-actions p { color: var(--muted); font-size: var(--text-body); }
+.format-guide { margin: 24px 0; padding: 16px 20px; border-radius: 10px; background: var(--canvas); font-size: var(--text-body); }
+summary { cursor: pointer; font-weight: var(--weight-bold); }
 .upload-form { display: flex; gap: 20px; flex-wrap: wrap; align-items: end; margin-bottom: 24px; }
-label { display: grid; gap: 10px; font-size: .9rem; font-weight: 700; min-width: 0; }
+label { display: grid; gap: 10px; font-size: var(--text-body); font-weight: var(--weight-bold); min-width: 0; }
 .file-field { flex: 1 1 280px; }
-input, select { width: 100%; min-width: 0; padding: 12px; border: 1px solid var(--line); border-radius: 8px; background: white; font-size: .9rem; }
+input, select { width: 100%; min-width: 0; padding: 12px; border: 1px solid var(--line); border-radius: 8px; background: white; font-size: var(--text-control); }
 input::file-selector-button { border: 0; border-radius: 5px; padding: 7px 12px; margin-right: 12px; background: var(--canvas); color: var(--navy); cursor: pointer; }
 button:disabled { opacity: .55; cursor: not-allowed; }
 .preview-section { border-top: 1px solid var(--line); margin-top: 24px; padding-top: 24px; }
 .preview-heading strong { color: var(--navy); }
 .preview-scroll { overflow-x: auto; margin-top: 16px; border: 1px solid var(--line); border-radius: 10px; }
-table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+table { width: 100%; border-collapse: collapse; font-size: var(--text-body); }
 th, td { padding: 14px 16px; text-align: left; white-space: nowrap; border-bottom: 1px solid var(--line-light); }
-th { background: var(--canvas); color: var(--muted); font-weight: 600; }
+th { background: var(--canvas); color: var(--muted); font-weight: var(--weight-semibold); }
 .text-cell { min-width: 160px; max-width: 280px; white-space: normal; overflow-wrap: anywhere; }
-small { display: block; color: var(--muted); margin-top: 5px; font-size: .875rem; }
+small { display: block; color: var(--muted); margin-top: 5px; font-size: var(--text-body); }
 .import-actions { display: flex; gap: 20px; justify-content: space-between; align-items: center; margin-top: 20px; }
 .import-actions button { flex-shrink: 0; }
-.import-errors { padding-left: 22px; max-height: 280px; overflow-y: auto; line-height: 1.8; }
-.result-link { font-weight: 700; text-decoration: underline; }
+.import-errors { padding-left: 22px; max-height: 280px; overflow-y: auto; line-height: var(--leading-body); }
+.result-link { font-weight: var(--weight-bold); text-decoration: underline; }
 .category-confirmation { margin-top: 24px; padding: 20px; border: 1px solid #e1bb64; border-radius: 12px; background: #fff9e9; }
-.category-confirmation ul { padding-left: 24px; max-height: 200px; overflow-y: auto; overflow-wrap: anywhere; line-height: 1.8; }
+.category-confirmation ul { padding-left: 24px; max-height: 200px; overflow-y: auto; overflow-wrap: anywhere; line-height: var(--leading-body); }
 .confirmation-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 12px; margin-top: 20px; }
 @media (max-width: 650px) {
   .import-card { padding: 20px 16px; }

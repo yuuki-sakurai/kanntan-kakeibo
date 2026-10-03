@@ -15,6 +15,6 @@
 <style scoped>
 .settings-page { max-width: 1080px; }
 .settings-menu { display: flex; gap: 24px; margin-bottom: 24px; border-bottom: 1px solid var(--line); overflow-x: auto; }
-.settings-menu a { padding: 14px 2px; color: var(--muted); font-weight: 700; white-space: nowrap; }
+.settings-menu a { padding: 14px 2px; color: var(--muted); font-weight: var(--weight-bold); white-space: nowrap; }
 .settings-menu a.active { color: var(--navy); border-bottom: 3px solid var(--coral); }
 </style>

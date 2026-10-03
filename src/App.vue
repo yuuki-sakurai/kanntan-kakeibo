@@ -71,7 +71,7 @@ watch(() => route.fullPath, () => { if (user.value && route.name !== "login" && 
 </template>
 
 <style scoped>
-.logout-button { display: inline-flex; font-size: 12px; padding: 10px 14px; }
+.logout-button { display: inline-flex; font-size: var(--text-caption); padding: 10px 14px; }
 .category-load-error { max-width: 1120px; margin: 16px auto; padding: 16px; background: #fff0ec; color: #932e19; }
-.category-load-error button { margin-left: 16px; text-decoration: underline; font-weight: 700; }
+.category-load-error button { margin-left: 16px; text-decoration: underline; font-weight: var(--weight-bold); }
 </style>

@@ -57,16 +57,16 @@ async function submit() {
 
 <style scoped>
 .category-settings { padding: 28px; border: 1px solid var(--line); border-radius: 18px; background: var(--paper); box-shadow: var(--shadow); }
-h2 { margin: 0; font-size: 1.25rem; color: var(--navy); }
-.intro { color: var(--muted); line-height: 1.8; margin: 10px 0 28px; }
-label { display: block; font-weight: 700; font-size: .9rem; margin-bottom: 10px; }
-label span { margin-left: 12px; color: var(--muted); font-weight: 400; }
+h2 { margin: 0; font-size: var(--text-section); color: var(--navy); }
+.intro { color: var(--muted); line-height: var(--leading-body); margin: 10px 0 28px; }
+label { display: block; font-weight: var(--weight-bold); font-size: var(--text-body); margin-bottom: 10px; }
+label span { margin-left: 12px; color: var(--muted); font-weight: var(--weight-regular); }
 .add-category-row { display: flex; gap: 12px; }
-input { min-width: 0; flex: 1; border: 1px solid var(--line); border-radius: 8px; padding: 14px; font-size: 1rem; }
+input { min-width: 0; flex: 1; border: 1px solid var(--line); border-radius: 8px; padding: 14px; font-size: var(--text-control); }
 button { flex-shrink: 0; }
 button:disabled { opacity: .55; cursor: not-allowed; }
 .category-list-heading { margin: 30px 0 16px; padding-top: 24px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
-h3 { margin: 0; font-size: 1rem; }
+h3 { margin: 0; font-size: var(--text-control); }
 .category-list-heading span { color: var(--muted); }
 .settings-category-list { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; padding: 0; margin: 0; }
 li { padding: 14px; border-radius: 8px; background: var(--canvas); display: flex; align-items: center; gap: 10px; overflow-wrap: anywhere; }

@@ -249,8 +249,8 @@ onMounted(async () => {
 .tax-toggle { display: flex; align-items: center; gap: 8px; min-height: 44px; cursor: pointer; }
 .tax-toggle input { width: 20px; height: 20px; }
 .tax-rate-field { width: 120px; }
-.item-tax-total { margin-left: auto; font-size: 13px; }
-.tax-help { color: var(--muted); font-size: 13px; line-height: 1.7; }
+.item-tax-total { margin-left: auto; font-size: var(--text-body); }
+.tax-help { color: var(--muted); font-size: var(--text-body); line-height: var(--leading-body); }
 .item-name-field input { scroll-margin-top: 14px; }
 .mobile-submit-label { display: none; }
 @media (max-width: 640px) {
@@ -287,9 +287,9 @@ onMounted(async () => {
     background: transparent;
   }
   .form-bottom-dock .form-total > div { min-width: 0; }
-  .form-bottom-dock .form-total span { font-size: 12px; white-space: nowrap; }
+  .form-bottom-dock .form-total span { font-size: var(--text-caption); white-space: nowrap; }
   .form-bottom-dock .form-total small { display: none; }
-  .form-bottom-dock .form-total strong { margin: 0; font-size: clamp(18px, 5vw, 24px); line-height: 1.2; white-space: nowrap; }
+  .form-bottom-dock .form-total strong { margin: 0; font-size: var(--text-amount); line-height: 1.2; white-space: nowrap; }
   .form-bottom-dock > .error-banner { grid-area: error; margin: 0; }
   .form-bottom-dock .form-actions { grid-area: actions; min-width: 0; }
   .form-bottom-dock .cancel-button,
