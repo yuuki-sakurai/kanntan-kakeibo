@@ -29,6 +29,34 @@ test('HTTP client sends all four API requests and preserves JSON contracts', asy
   assert.equal(calls[2].init.headers['Content-Type'], 'application/json')
 })
 
+test('monthly budgets use the budget API contract and authenticated PUT writes', async (t) => {
+  const calls = []
+  const budget = { year: 2026, month: 10, amount: 80000, categoryBudgets: [{ category: 'food', amount: 30000 }] }
+  t.mock.method(globalThis, 'fetch', async (url, init) => {
+    calls.push({ url, init })
+    return Response.json(budget)
+  })
+  const api = new HttpExpenseApi('/api/v1')
+  api.csrfToken = 'budget-csrf'
+  assert.deepEqual(await api.getMonthlyBudget(2026, 10), budget)
+  assert.deepEqual(await api.saveMonthlyBudget(budget), budget)
+  assert.deepEqual(calls.map(call => [call.url, call.init.method]), [
+    ['/api/v1/monthly-budget?year=2026&month=10', 'GET'],
+    ['/api/v1/monthly-budget', 'PUT'],
+  ])
+  assert.deepEqual(JSON.parse(calls[1].init.body), budget)
+  assert.equal(calls[1].init.headers['X-CSRF-TOKEN'], 'budget-csrf')
+  assert.equal(calls[1].init.headers['Content-Type'], 'application/json')
+})
+
+test('monthly budget validation errors stay specific and user friendly', async (t) => {
+  const api = new HttpExpenseApi('/api/v1')
+  api.csrfToken = 'budget-csrf'
+  t.mock.method(globalThis, 'fetch', async () => Response.json({ message: 'SQL secret' }, { status: 422 }))
+  await assert.rejects(api.saveMonthlyBudget({ year: 2026, month: 10, amount: -1, categoryBudgets: [] }), error =>
+    error instanceof ExpenseApiError && error.status === 422 && error.message.includes('予算額') && !error.message.includes('SQL secret'))
+})
+
 test('errors reject, hide server internals, and never silently return mock data', async (t) => {
   const api = new HttpExpenseApi('/api/v1')
   api.csrfToken = 'test-csrf'

@@ -7,6 +7,7 @@ import ExpenseFormView from "@/views/ExpenseFormView.vue"
 import SettingsView from "@/views/SettingsView.vue"
 import CsvImportView from "@/views/CsvImportView.vue"
 import CategorySettingsView from "@/views/CategorySettingsView.vue"
+import MonthlyBudgetSettingsView from "@/views/MonthlyBudgetSettingsView.vue"
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -24,6 +25,7 @@ const router = createRouter({
         { path: "", redirect: { name: "csv-import" } },
         { path: "import", name: "csv-import", component: CsvImportView },
         { path: "categories", name: "category-settings", component: CategorySettingsView },
+        { path: "budget", name: "monthly-budget-settings", component: MonthlyBudgetSettingsView },
       ],
     },
   ],
