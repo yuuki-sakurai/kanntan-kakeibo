@@ -145,12 +145,13 @@ onMounted(() => { void Promise.all([loadCategories(), loadBudget()]) })
 .budget-input-wrap input { width: 100%; min-width: 0; padding: 0; border: 0; outline: 0; background: transparent; color: var(--ink); font-size: var(--text-control); }
 .budget-category-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin: 32px 0 14px; }
 .budget-category-heading h3 { margin: 0; color: var(--navy); }
-.budget-category-heading > span { color: var(--muted); font-size: var(--text-body); }
+.budget-category-heading > div { min-width: 0; }
+.budget-category-heading > span { flex-shrink: 0; color: var(--muted); font-size: var(--text-body); }
 .budget-category-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 28px; }
-.budget-category-field { min-width: 0; min-height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 18px; border-top: 1px solid var(--line-light); }
+.budget-category-field { min-width: 0; min-height: 72px; padding: 14px 0; display: flex; align-items: center; justify-content: space-between; gap: 18px; border-top: 1px solid var(--line-light); }
 .budget-category-name { min-width: 0; display: flex; align-items: center; gap: 10px; color: var(--ink); font-weight: var(--weight-semibold); }
 .budget-category-name i { width: 10px; height: 10px; flex: 0 0 auto; border-radius: 50%; }
-.budget-category-field .budget-input-wrap { width: min(205px, 50%); height: 42px; }
+.budget-category-field .budget-input-wrap { flex-shrink: 0; width: min(205px, 50%); height: 42px; }
 .budget-category-field input { font-size: var(--text-control); }
 .budget-form-actions { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 26px; padding-top: 22px; border-top: 1px solid var(--line); }
 .budget-form-actions p { margin: 0; color: var(--muted); font-size: var(--text-body); }

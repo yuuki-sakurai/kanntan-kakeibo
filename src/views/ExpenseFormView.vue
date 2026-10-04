@@ -250,12 +250,13 @@ onMounted(async () => {
 .tax-toggle input { width: 20px; height: 20px; }
 .tax-rate-field { width: 120px; }
 .item-tax-total { margin-left: auto; font-size: var(--text-body); }
-.tax-help { color: var(--muted); font-size: var(--text-body); line-height: var(--leading-body); }
+.add-item-bottom { margin-top: 16px; }
+.tax-help { margin: 16px 0 0; color: var(--muted); font-size: var(--text-body); line-height: var(--leading-body); }
 .item-name-field input { scroll-margin-top: 14px; }
 .mobile-submit-label { display: none; }
 @media (max-width: 640px) {
   .item-tax-total { width: 100%; margin-left: 0; }
-  .add-item-bottom { width: 100%; min-height: 48px; margin-top: 14px; }
+  .add-item-bottom { width: 100%; min-height: 48px; }
 }
 
 @media (max-width: 720px) {
@@ -268,7 +269,6 @@ onMounted(async () => {
     z-index: 29;
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(128px, 42%);
-    grid-template-areas: "error error" "total actions";
     align-items: center;
     gap: 8px 12px;
     padding: 10px max(14px, env(safe-area-inset-right)) 10px max(14px, env(safe-area-inset-left));
@@ -277,7 +277,7 @@ onMounted(async () => {
     box-shadow: 0 -8px 24px rgba(21, 33, 61, 0.1);
   }
   .form-bottom-dock .form-total {
-    grid-area: total;
+    grid-column: 1;
     min-width: 0;
     margin: 0;
     padding: 0;
@@ -289,12 +289,27 @@ onMounted(async () => {
   .form-bottom-dock .form-total > div { min-width: 0; }
   .form-bottom-dock .form-total span { font-size: var(--text-caption); white-space: nowrap; }
   .form-bottom-dock .form-total small { display: none; }
-  .form-bottom-dock .form-total strong { margin: 0; font-size: var(--text-amount); line-height: 1.2; white-space: nowrap; }
-  .form-bottom-dock > .error-banner { grid-area: error; margin: 0; }
-  .form-bottom-dock .form-actions { grid-area: actions; min-width: 0; }
+  .form-bottom-dock .form-total strong { align-self: flex-start; max-width: 100%; margin: 0; font-size: var(--text-amount); line-height: 1.2; overflow-wrap: anywhere; }
+  .form-bottom-dock > .error-banner { grid-column: 1 / -1; grid-row: 1; margin: 0; }
+  .form-bottom-dock .form-actions { grid-column: 2; min-width: 0; }
   .form-bottom-dock .cancel-button,
   .desktop-submit-label { display: none; }
   .form-bottom-dock .submit-button { width: 100%; min-width: 0; min-height: 48px; padding: 0 10px; }
   .mobile-submit-label { display: inline; }
+}
+
+@media (max-width: 480px) {
+  .form-bottom-dock {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+    padding-bottom: 18px;
+  }
+  .form-bottom-dock .form-total {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 12px;
+  }
+  .form-bottom-dock .form-actions { grid-column: 1; }
 }
 </style>

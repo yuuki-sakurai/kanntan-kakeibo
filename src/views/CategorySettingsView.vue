@@ -65,6 +65,7 @@ label span { margin-left: 12px; color: var(--muted); font-weight: var(--weight-r
 input { min-width: 0; flex: 1; border: 1px solid var(--line); border-radius: 8px; padding: 14px; font-size: var(--text-control); }
 button { flex-shrink: 0; }
 button:disabled { opacity: .55; cursor: not-allowed; }
+.success-banner { margin-top: 18px; }
 .category-list-heading { margin: 30px 0 16px; padding-top: 24px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
 h3 { margin: 0; font-size: var(--text-control); }
 .category-list-heading span { color: var(--muted); }

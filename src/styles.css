@@ -162,7 +162,7 @@ select:focus-visible {
   justify-content: center;
   gap: 7px;
   min-height: 44px;
-  padding: 0 20px;
+  padding: 10px 20px;
   border: 0;
   border-radius: 12px;
   background: var(--coral);
@@ -647,6 +647,7 @@ p {
 }
 
 .daily-total-card > div {
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -658,6 +659,7 @@ p {
 }
 
 .daily-total-card strong {
+  overflow-wrap: anywhere;
   font-family: var(--font-ui);
   font-size: var(--text-page);
 }
@@ -714,15 +716,23 @@ p {
 
 .item-list li {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
-  gap: 18px;
+  gap: 6px 18px;
   color: var(--muted);
   font-size: var(--text-body);
 }
 
 .item-list li span:last-child {
+  margin-left: auto;
   font-family: var(--font-ui);
-  white-space: nowrap;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.item-list li span:first-child {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .empty-state {
@@ -1038,8 +1048,8 @@ p {
 }
 
 @media (max-width: 720px) {
-  body {
-    padding-bottom: 76px;
+  .authenticated-shell {
+    padding-bottom: calc(76px + env(safe-area-inset-bottom));
   }
 
   .app-header {
@@ -1153,6 +1163,7 @@ p {
 
   .daily-total-card {
     padding: 22px;
+    flex-wrap: wrap;
   }
 
   .daily-total-card strong {
@@ -1171,7 +1182,24 @@ p {
   }
 
   .expense-title-row > strong {
+    align-self: flex-end;
+    max-width: 100%;
+    overflow-wrap: anywhere;
     font-size: var(--text-control);
+  }
+
+  .expense-title-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .item-list {
+    gap: 16px;
+  }
+
+  .item-list li {
+    flex-direction: column;
+    gap: 4px;
   }
 
   .expense-form {
@@ -1206,14 +1234,12 @@ p {
   }
 
   .form-item-index {
-    position: absolute;
-    top: 16px;
-    right: 17px;
+    grid-column: 1 / -1;
+    justify-self: start;
   }
 
   .item-name-field {
     grid-column: 1 / -1;
-    padding-right: 35px;
   }
 
   .quantity-field {
@@ -1253,8 +1279,8 @@ p {
     bottom: 0;
     left: 0;
     z-index: 30;
-    height: 68px;
-    padding: 7px max(18px, env(safe-area-inset-left));
+    height: calc(68px + env(safe-area-inset-bottom));
+    padding: 7px max(18px, env(safe-area-inset-right)) calc(7px + env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left));
     display: grid;
     grid-template-columns: 1fr 66px 1fr;
     align-items: end;
@@ -1421,6 +1447,7 @@ p {
 
 @media (max-width: 720px) {
   .page { padding-top: 27px; }
+  .page-topline { margin-bottom: 20px; }
   .calendar-card { padding: 19px 10px 12px; }
   .category-section { padding: 23px 18px; }
   .budget-panel { padding: 22px 17px; border-radius: 18px; }
