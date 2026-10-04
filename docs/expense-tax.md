@@ -7,10 +7,10 @@
 
 ## API契約と反映順
 
-POST / PUT `/api/v1/expenses` の各itemsに `taxable: boolean` と `taxRate: number` を追加する。加算なしの場合は `false` / `0` を送る。
+POST `/api/v1/expenses` と PUT `/api/v1/expenses/{id}` の各itemsに `taxable: boolean` と `taxRate: number` を送る。加算なしの場合は `false` / `0` を送る。
 レスポンスは各itemsに `taxable`、`taxRate`、サーバー計算の `taxAmount` を返す。支出・月別・日別・カテゴリ別の合計は税込とする。
 旧クライアントから省略された税情報と既存・CSV明細は加算なしとして扱う。
 
-先に `kakeibo-app` の税対応と `2026_09_17_000001_add_tax_to_expense_items.php` のmigrationを反映し、その後フロントを反映する。旧APIは追加フィールドを拒否するため、フロントだけを先に公開しない。
+税対応は共通Laravelの `kakeibo-app` に実装済み。新しい環境へ反映する際は `2026_09_17_000001_add_tax_to_expense_items.php` を含むmigrationを先に適用し、その後フロントを反映する。旧APIは追加フィールドを拒否するため、フロントだけを先に公開しない。
 
-確認コマンド: `node --test tests/*.test.mjs`、`npm run build`。
+確認コマンド: Node.js 22.13.0以上の環境で `node --test tests/*.test.mjs`、`npm run build`。Dockerを使う場合は [READMEのホットリロード用構成](../README.md#ホットリロード用docker構成) を参照する。

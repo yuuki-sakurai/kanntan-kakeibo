@@ -173,15 +173,18 @@ th { background: var(--canvas); color: var(--muted); font-weight: var(--weight-s
 small { display: block; color: var(--muted); margin-top: 5px; font-size: var(--text-body); }
 .import-actions { display: flex; gap: 20px; justify-content: space-between; align-items: center; margin-top: 20px; }
 .import-actions button { flex-shrink: 0; }
+.error-banner { display: block; }
 .import-errors { padding-left: 22px; max-height: 280px; overflow-y: auto; line-height: var(--leading-body); }
 .result-link { font-weight: var(--weight-bold); text-decoration: underline; }
 .category-confirmation { margin-top: 24px; padding: 20px; border: 1px solid #e1bb64; border-radius: 12px; background: #fff9e9; }
 .category-confirmation ul { padding-left: 24px; max-height: 200px; overflow-y: auto; overflow-wrap: anywhere; line-height: var(--leading-body); }
 .confirmation-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 12px; margin-top: 20px; }
+.confirmation-actions button { padding: 10px 14px; }
 @media (max-width: 650px) {
   .import-card { padding: 20px 16px; }
   .import-heading { align-items: stretch; }
   .import-heading button, .upload-form button, .encoding-field { width: 100%; }
   .import-actions { flex-direction: column; align-items: stretch; }
+  .confirmation-actions { flex-direction: column-reverse; align-items: stretch; }
 }
 </style>

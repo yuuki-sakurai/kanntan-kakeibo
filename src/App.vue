@@ -20,7 +20,7 @@ watch(() => route.fullPath, () => { if (user.value && route.name !== "login" && 
 </script>
 
 <template>
-  <div class="app-shell">
+  <div class="app-shell" :class="{ 'authenticated-shell': user && route.name !== 'login' && route.name !== 'register' }">
     <header v-if="user && route.name !== 'login' && route.name !== 'register'" class="app-header">
       <div class="header-inner">
         <RouterLink class="brand" to="/" aria-label="家計簿 ホーム">
